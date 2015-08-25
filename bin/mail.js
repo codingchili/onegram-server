@@ -24,7 +24,7 @@ module.exports = {
           text: '',
           html: 'Thank you for registering with 1Gram,' +
           '<br><br>' +
-          'You may activate your account using this <a href="https://127.0.0.1/register/verify?token=' + key + '">link</a>.' +
+          'You may activate your account using this <a href="https://ca.chilimannen.com/register/verify?token=' + key + '">link</a>.' +
           '<br><br>' +
           'Regards,<br>' +
           '1Gram.com'
