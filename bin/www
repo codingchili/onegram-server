@@ -9,7 +9,7 @@ var debug = require('debug')('anigram:server');
 var https = require('https');
 var fs = require('fs');
 
-var PORT = 443;
+var PORT = 1443;
 https.CLIENT_RENEG_LIMIT = 0;
 https.globalAgent.maxSockets = 50;
 
@@ -50,9 +50,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof PORT === 'string'
+    ? 'Pipe ' + PORT
+    : 'Port ' + PORT;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -74,6 +74,6 @@ function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
-    : 'port ' + addr.port;
+    : 'port ' + addr.PORT;
   debug('Listening on ' + bind);
 }
