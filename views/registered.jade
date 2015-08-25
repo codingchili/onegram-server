@@ -1,0 +1,8 @@
+extends layout
+block content
+    include header
+    if verification
+        include registration-success
+    else
+        include registration-failure
+    include footer
