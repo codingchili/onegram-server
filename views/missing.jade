@@ -1,6 +1,7 @@
-extends ./layout.jade
+extends layout.jade
+
 block content
+    include header
     .container
-        include ./header.jade
-        include ./banner-missing.jade
-        include ./footer.jade
+        include banner-missing
+        include footer

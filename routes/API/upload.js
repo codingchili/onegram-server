@@ -14,8 +14,6 @@ var token = require('../../model/token');
 app.post('/', function (req, res) {
     var params = req.body;
 
-    console.log(req.body);
-
     if (params.image && params.description) {
         token.user(params.token, function (err, result) {
             account.verified(result.user, function (err, result) {
