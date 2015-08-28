@@ -1,2 +1,2 @@
 # onegram
-Server for the onegram application.
+NodeJS / Express Server for the onegram application.
