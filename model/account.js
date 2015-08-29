@@ -1,10 +1,5 @@
 /**
- * Created by krakenboss on 2015-08-02.
- *
- * register devices by email
- * create registration for unregistered
- * do not store email addresses
- * a hash of the android id is the user account token
+ * @author Robin Duda
  */
 
 var hash = require('../bin/hash');
