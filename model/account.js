@@ -115,7 +115,7 @@ module.exports = {
     },
 
     clear: function clear(callback) {
-        Account.remove({}, callback);
+        Account.deleteMany({}, callback);
     },
 
     remove: function remove(username, callback) {

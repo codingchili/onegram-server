@@ -148,7 +148,7 @@ module.exports = {
     },
 
     clear: function clear(callback) {
-        Picture.remove({}, function (err, result) {
+        Picture.deleteMany({}, function (err, result) {
             callback(err);
         });
     }

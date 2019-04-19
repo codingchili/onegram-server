@@ -70,7 +70,7 @@ module.exports = {
     },
 
     clear: function clear(callback) {
-        Token.remove({}, function (err) {
+        Token.deleteMany({}, function (err) {
             callback(err);
         })
     }
