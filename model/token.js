@@ -19,7 +19,7 @@ var Token = mongoose.model('Token', {
 
 module.exports = {
     add: function add(id, callback) {
-        Token.remove({user: id}, function (err, result) {
+        Token.deleteOne({user: id}, function (err, result) {
             var token = new Token(
                 {
                     user: id,

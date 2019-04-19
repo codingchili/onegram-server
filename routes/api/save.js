@@ -7,20 +7,20 @@ var app = express();
 var protocol = require('./protocol');
 var token = require('../../model/token');
 var account = require('../../model/account');
-
+var debug = require('debug')('anigram:api');
 
 
 app.post('/', function (req, res) {
     var params = req.body;
-    console.log(params);
 
     if (params.image && params.token) {
-        token.user(req.body.token, function(err, result) {
-            account.addToGallery(params.image, result.user, function(err) {
-
-                if (err)
+        token.user(req.body.token, function (err, result) {
+            account.addToGallery(params.image, result.user, function (err) {
+                if (err) {
+                    debug(err);
                     res.sendStatus(protocol.error);
-                else {
+                } else {
+                    debug(`${result.user} saved ${params.image} to gallery`);
                     res.sendStatus(protocol.success);
                 }
             })

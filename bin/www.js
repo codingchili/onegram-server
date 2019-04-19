@@ -16,7 +16,7 @@ https.globalAgent.maxSockets = 50;
 var certificate = {
   key: fs.readFileSync(__dirname + '/../certificate/server.key'),
   cert: fs.readFileSync(__dirname + '/../certificate/server.crt'),
-  requestCert: true,
+  requestCert: false,
   rejectUnauthorized: false,
   ciphers: [
     "ECDHE-RSA-AES256-SHA384",
@@ -39,10 +39,11 @@ var certificate = {
   honorCipherOrder: true
 };
 
-var server = https.createServer(certificate, app).listen(PORT);
+let server = https.createServer(certificate, app);
+
 server.on('error', onError);
 server.on('listening', onListening);
-
+server.listen(PORT);
 
 
 function onError(error) {
@@ -50,7 +51,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof PORT === 'string'
+  let bind = typeof PORT === 'string'
     ? 'Pipe ' + PORT
     : 'Port ' + PORT;
 
@@ -71,9 +72,10 @@ function onError(error) {
 
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
+  let addr = server.address();
+  let bind = typeof addr === 'string'
     ? 'pipe ' + addr
-    : 'port ' + addr.PORT;
+    : 'port ' + addr.port;
+
   debug('Listening on ' + bind);
 }

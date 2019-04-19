@@ -5,6 +5,7 @@
 var hash = require('../bin/hash');
 var mongoose = require('../bin/database').get();
 var uuid = require('node-uuid');
+var debug = require('debug')('anigram:db');
 
 var Account = mongoose.model('Account', {
     username: String,
@@ -44,11 +45,21 @@ module.exports = {
     authenticate: function authenticate(username, password, callback) {
         Account.findOne({username: username}, function (err, account) {
             if (!err && account) {
-                hash.calculate({data: password, salt: account.salt}, function (err, password, salt) {
-                    callback(password == account.password, account._id);
+                hash.calculate({data: password, salt: account.salt}, function (err, password) {
+                    let authenticated = password === account.password;
+
+                    if (authenticated) {
+                        debug(`authentication succeeded ${username}`);
+                    } else {
+                        debug(`authentication failed ${username} [bad password]`);
+                    }
+
+                    callback(authenticated, account._id);
                 });
-            } else
+            } else {
+                debug(`authentication failed ${username} [user missing]`);
                 callback(false);
+            }
         });
     },
 
@@ -65,7 +76,7 @@ module.exports = {
                 throw err;
 
             if (result.n == 1) {
-                Account.findOne({key:token}, function (err, result) {
+                Account.findOne({key: token}, function (err, result) {
                     callback(err, {verification: true, name: result.username});
                 });
             } else
@@ -108,19 +119,19 @@ module.exports = {
     },
 
     remove: function remove(username, callback) {
-        Account.remove({'username': username}, function (err) {
+        Account.deleteOne({'username': username}, function (err) {
             callback(err);
         });
     },
 
     registered: function registered(username, callback) {
         Account.findOne({'username': username}, function (err, result) {
-            console.log(result);
-
-            if (result)
+            if (result) {
+                debug(`registered user ${result.user}`);
                 callback(true);
-            else
+            } else {
                 callback(false);
+            }
         });
     }
 };

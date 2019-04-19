@@ -310,7 +310,7 @@ describe('API', function () {
 
         it('Should add an image to the users gallery.', function (done) {
             request(url)
-                .post('/api/follow')
+                .post('/api/save')
                 .send({image: image.id, token: key.token})
                 .end(function (err, res) {
                     assert.equal(res.status, protocol.success, 'should have success status.');
@@ -384,7 +384,7 @@ describe('API', function () {
                     assert.equal(res.status, protocol.unauthorized, 'Should not be authorized.');
 
                     request(url)
-                        .get('/api/follow?' + querystring.stringify({token: 'invalid_token'}))
+                        .get('/api/save?' + querystring.stringify({token: 'invalid_token'}))
                         .end(function (err, res) {
 
                             assert.equal(res.status, protocol.unauthorized, 'Should not be authorized.');

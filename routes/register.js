@@ -6,42 +6,47 @@
  */
 
 
-var http = require('./API/protocol');
+var http = require('./api/protocol');
 var express = require('express');
 var app = express();
 var account = require('../model/account');
-var protocol = require('./API/protocol');
 var mail = require('../bin/mail');
+var debug = require('debug')('anigram:mailer');
 
+const MIN_PASSWORD = 8;
+const MIN_USERNAME = 5;
 
 app.post('/', function (req, res) {
+    let username = req.body.username || '';
+    let password = req.body.password || '';
 
-    if (req.body.password && req.body.username) {
-        if (req.body.password.length >= 8 && req.body.username.length >= 5) {
+    if (password >= MIN_PASSWORD &&
+        username >= MIN_USERNAME) {
 
-            account.registered(req.body.username, function (result) {
-                if (result) {
-                    res.sendStatus(http.conflict);
-                } else {
-                    account.create(req.body.username, req.body.password, function (err, key) {
-                        mail.send(req.body.username, key,
-                            function (err) {
-                                if (err) {
-                                    // rollback: remove the account, the email could not be sent.
-                                    res.sendStatus(http.illegal);
-                                    account.remove(req.body.username, function()  {});
-                                } else {
-                                    res.sendStatus(http.success);
-                                }
-                            });
-                    });
-                }
-            });
-        }
-        else
-            res.sendStatus(http.unaccepted);
-    } else
+        account.registered(username, function (result) {
+            if (result) {
+                res.sendStatus(http.conflict);
+            } else {
+                account.create(username, password, function (err, key) {
+                    mail.send(username, key,
+                        function (err) {
+                            if (err) {
+                                debug(err);
+                                // rollback: remove the account, the email could not be sent.
+                                res.sendStatus(http.illegal);
+                                account.remove(username, function () {
+                                    //
+                                });
+                            } else {
+                                res.sendStatus(http.success);
+                            }
+                        });
+                });
+            }
+        });
+    } else {
         res.sendStatus(http.unaccepted);
+    }
 });
 
 app.get('/verify', function (req, res) {
@@ -55,7 +60,7 @@ app.get('/verify', function (req, res) {
                 res.render('registered.jade', {activation: result.verification});
         });
     } else
-        res.sendStatus(protocol.error);
+        res.sendStatus(http.error);
 });
 
 module.exports = app;
