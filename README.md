@@ -1,4 +1,4 @@
-# onegram
+# Onegram NodeJS Server
 NodeJS / Express Server for the Onegram image sharing application. [YouTube demo](https://www.youtube.com/watch?v=86SiHCIcKv0)
 
 <p align="center">
