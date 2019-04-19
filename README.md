@@ -1,7 +1,9 @@
 # onegram
 NodeJS / Express Server for the Onegram image sharing application.
 
-![](onegram.png)
+<p align="center">
+  <img src="onegram.png">
+</p>
 
 # Features
 - authentication
