@@ -3,7 +3,7 @@
  */
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/anigram');
+mongoose.connect('mongodb://localhost/anigram', { useNewUrlParser: true } );
 
 
 module.exports = {
