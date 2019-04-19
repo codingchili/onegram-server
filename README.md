@@ -1,5 +1,5 @@
 # onegram
-NodeJS / Express Server for the Onegram image sharing application.
+NodeJS / Express Server for the Onegram image sharing application. [YouTube demo](https://www.youtube.com/watch?v=86SiHCIcKv0)
 
 <p align="center">
   <img src="onegram.png">
