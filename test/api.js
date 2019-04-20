@@ -7,7 +7,7 @@
 // starts the server.
 //const www = require('../bin/www');
 
-const protocol = require('../routes/API/protocol');
+const protocol = require('../routes/api/protocol');
 const should = require('should');
 const assert = require('assert');
 const request = require('supertest');
