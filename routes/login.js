@@ -1,18 +1,17 @@
 /**
  * Created by krakenboss on 2015-08-02.
  */
+const http = require('./api/protocol');
+const express = require('express');
+const app = express();
+const account = require('../model/account');
+const session = require('../model/token');
 
-var http = require('./api/protocol');
-var express = require('express');
-var app = express();
-var account = require('../model/account');
-var session = require('../model/token');
 
-
-app.post('/', function(req, res) {
-      account.authenticate(req.body.username, req.body.password, function (authenticated, id) {
+app.post('/', (req, res) => {
+      account.authenticate(req.body.username, req.body.password, (authenticated, id) => {
           if (authenticated) {
-              session.add(id, function(err, token) {
+              session.add(id, (err, token) => {
                   if (err) {
                       throw err;
                   }

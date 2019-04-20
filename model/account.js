@@ -20,8 +20,8 @@ module.exports = {
     create: function create(username, password, callback) {
         Account.findOne({username: username}, function (err, result) {
             if (!err && !result) {
-                hash.calculate({data: password}, function (err, password, salt) {
-                    var account = new Account({
+                hash.calculate({data: password}, (err, password, salt) => {
+                    let account = new Account({
                         username: username,
                         password: password,
                         salt: salt,
@@ -71,11 +71,12 @@ module.exports = {
     },
 
     verify: function verify(token, callback) {
-        Account.update({key: token}, {verified: true}, function (err, result) {
-            if (err)
+        Account.updateOne({key: token}, {verified: true}, function (err, result) {
+            if (err) {
                 throw err;
+            }
 
-            if (result.n == 1) {
+            if (result.n === 1) {
                 Account.findOne({key: token}, function (err, result) {
                     callback(err, {verification: true, name: result.username});
                 });
@@ -85,7 +86,7 @@ module.exports = {
     },
 
     addToGallery: function addToGallery(picture, user, callback) {
-        Account.update({_id: user}, {$push: {gallery: picture}}, {upsert: false}, function (err, result) {
+        Account.updateOne({_id: user}, {$push: {gallery: picture}}, {upsert: false}, function (err, result) {
             if (err)
                 throw err;
 
@@ -94,7 +95,7 @@ module.exports = {
     },
 
     removeFromGallery: function removeFromGallery(picture, user, callback) {
-        Account.update({_id: user}, {$pull: {gallery: picture}}, {upsert: false}, function (err, result) {
+        Account.updateOne({_id: user}, {$pull: {gallery: picture}}, {upsert: false}, function (err, result) {
             if (err)
                 throw err;
 

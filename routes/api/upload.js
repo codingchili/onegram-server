@@ -11,13 +11,13 @@ var account = require('../../model/account');
 var token = require('../../model/token');
 
 
-app.post('/', function (req, res) {
-    var params = req.body;
+app.post('/', (req, res) => {
+    let params = req.body;
 
     if (params.image && params.description) {
         token.user(params.token, function (err, result) {
             account.verified(result.user, function (err, result) {
-                if (result == true) {
+                if (result === true) {
                     picture.upload(params.image, params.description, function (err, id) {
                         if (err) {
                             res.statusCode = protocol.error;
@@ -27,12 +27,12 @@ app.post('/', function (req, res) {
                             res.send({id: id})
                         }
                     });
-                } else
+                } else {
                     res.sendStatus(protocol.forbidden);
+                }
             });
         });
-    }
-    else {
+    } else {
         res.statusCode = protocol.error;
         res.send();
     }

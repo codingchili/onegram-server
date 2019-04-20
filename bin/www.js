@@ -3,17 +3,16 @@
 /**
  * Module dependencies.
  */
+const app = require('../app');
+const debug = require('debug')('anigram:server');
+const https = require('https');
+const fs = require('fs');
 
-var app = require('../app');
-var debug = require('debug')('anigram:server');
-var https = require('https');
-var fs = require('fs');
-
-var PORT = 1443;
+const PORT = 1443;
 https.CLIENT_RENEG_LIMIT = 0;
 https.globalAgent.maxSockets = 50;
 
-var certificate = {
+const certificate = {
   key: fs.readFileSync(__dirname + '/../certificate/server.key'),
   cert: fs.readFileSync(__dirname + '/../certificate/server.crt'),
   requestCert: false,

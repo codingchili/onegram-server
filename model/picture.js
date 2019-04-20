@@ -106,7 +106,7 @@ module.exports = {
 
     addViews: function addView(pictures, callback) {
         for (var i = 0; i < pictures.length; i++)
-            Picture.update({_id: pictures[i]._id}, {$inc: {views: 1}}).exec(callback);
+            Picture.updateOne({_id: pictures[i]._id}, {$inc: {views: 1}}).exec(callback);
     },
 
 
@@ -119,7 +119,7 @@ module.exports = {
     },
 
     report: function report(picture, callback) {
-        Picture.update({_id: picture}, {$inc: {reported: 1}}, function (err, result) {
+        Picture.updateOne({_id: picture}, {$inc: {reported: 1}}, function (err, result) {
             if (err)
                 callback(err);
             else {

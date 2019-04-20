@@ -20,8 +20,8 @@ app.post('/', function (req, res) {
     let username = req.body.username || '';
     let password = req.body.password || '';
 
-    if (password >= MIN_PASSWORD &&
-        username >= MIN_USERNAME) {
+    if (password.length >= MIN_PASSWORD &&
+        username.length >= MIN_USERNAME) {
 
         account.registered(username, function (result) {
             if (result) {
@@ -38,7 +38,7 @@ app.post('/', function (req, res) {
                                     //
                                 });
                             } else {
-                                res.sendStatus(http.success);
+                                res.send({key: key});
                             }
                         });
                 });
@@ -50,17 +50,20 @@ app.post('/', function (req, res) {
 });
 
 app.get('/verify', function (req, res) {
-    token = req.query.token;
+    let token = req.query.token;
 
     if (token) {
         account.verify(token, function (err, result) {
             if (result.verification) {
                 res.render('registered.jade', {activation: result.verification, username: result.name});
-            } else
+            } else {
+                res.statusCode = http.unaccepted;
                 res.render('registered.jade', {activation: result.verification});
+            }
         });
-    } else
-        res.sendStatus(http.error);
+    } else {
+        res.sendStatus(http.unaccepted);
+    }
 });
 
 module.exports = app;

@@ -3,6 +3,10 @@
  *
  * tests login and registration.
  */
+
+// starts the server.
+//const www = require('../bin/www');
+
 const protocol = require('../routes/API/protocol');
 const should = require('should');
 const assert = require('assert');
@@ -15,40 +19,37 @@ const describe = require('mocha').describe;
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-describe('API', function () {
+describe('API', () => {
     const url = 'https://localhost:1443';
     const key = {token: '', verification: ''};
     const image = {id: '', data: 'data', description: '#life #nodejs #attack haha!'};
-    const user = {name: 'chilimannen93@testing.com', password: 'oneflowertwoflower'};
-    const user2 = {name: 'chilimannen', password: 'nullifish'};
+    const user = {name: 'codingchili@testing.com', password: 'oneflowertwoflower'};
+    const user2 = {name: 'coderchili@testing.com', password: 'nullifish'};
 
-    after(function () {
-        account.clear(function (err) {
-           if (err)
-                throw err;
-        });
+    after((done) => {
+        account.clear((err) => {
+            if (err) throw err;
+            token.clear((err) => {
+                if (err) throw err;
+                picture.clear((err) => {
+                    if (err) throw err;
 
-        token.clear(function (err) {
-            if (err)
-                throw err;
-        });
-
-        picture.clear(function (err) {
-            if (err)
-                throw err;
+                    done();
+                });
+            });
         });
     });
 
-    before(function () {
+    before((done) => {
+        done();
     });
 
-    describe('register', function () {
-        it('Should return success on creation.', function (done) {
+    describe('register', () => {
+        it('Should return success on creation.', (done) => {
             request(url)
                 .post('/register')
                 .send({username: user.name, password: user.password})
-                .end(function (err, res) {
-
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -60,11 +61,11 @@ describe('API', function () {
                 });
         });
 
-        it('Should return conflict on already exists.', function (done) {
+        it('Should return conflict on already exists.', (done) => {
             request(url)
                 .post('/register')
                 .send({username: user.name, password: user.password})
-                .end(function (err, res) {
+                .end((err, res) => {
 
                     if (err) {
                         throw err;
@@ -75,11 +76,11 @@ describe('API', function () {
                 });
         });
 
-        it('Should return unaccepted on invalid indata.', function (done) {
+        it('Should return unaccepted on invalid indata.', (done) => {
             request(url)
                 .post('/register')
                 .send({username: user.name, password: 'Error'})
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -89,10 +90,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should verify an existing account.', function (done) {
+        it('Should verify an existing account.', (done) => {
             request(url)
                 .get('/register/verify?' + querystring.stringify({token: key.verification}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -102,10 +103,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should reject invalid verification tokens.', function (done) {
+        it('Should reject invalid verification tokens.', (done) => {
             request(url)
                 .get('/register/verify?' + querystring.stringify({token: 'INVALID_TOKEN'}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -116,13 +117,13 @@ describe('API', function () {
         });
     });
 
-    describe('login', function () {
+    describe('login', () => {
 
-        it('Should return authorized for existing.', function (done) {
+        it('Should return authorized for existing.', (done) => {
             request(url)
                 .post('/login')
                 .send({username: user.name, password: user.password})
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -134,11 +135,11 @@ describe('API', function () {
                 });
         });
 
-        it('Should return unauthorized for non-existing or invalid.', function (done) {
+        it('Should return unauthorized for non-existing or invalid.', (done) => {
             request(url)
                 .post('/login')
                 .send({username: 'INVALID_USERNAME', password: 'INVALID_PASSWORD'})
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -149,12 +150,12 @@ describe('API', function () {
         });
     });
 
-    describe('token', function () {
+    describe('token', () => {
 
-        it('Should return success for existing token.', function (done) {
+        it('Should return success for existing token.', (done) => {
             request(url)
                 .get('/api/token?' + querystring.stringify({token: key.token}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -164,10 +165,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should return error on invalid token.', function (done) {
+        it('Should return error on invalid token.', (done) => {
             request(url)
                 .get('/api/token?' + querystring.stringify({token: 'INVALID_TOKEN'}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -179,12 +180,12 @@ describe('API', function () {
     });
 
 
-    describe('license', function () {
+    describe('license', () => {
 
-        it('Should return the license text with success.', function (done) {
+        it('Should return the license text with success.', (done) => {
             request(url)
                 .get('/api/license')
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -196,26 +197,26 @@ describe('API', function () {
     });
 
 
-    describe('upload', function () {
-
-        it('Should not allow uploading of images while not verified.', function (done) {
+    describe('upload', () => {
+        it('Should not allow uploading of images while not verified.', (done) => {
             request(url)
                 .post('/register')
                 .send({username: user2.name, password: user2.password})
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
 
+                    assert.equal(res.status, protocol.success, 'account registration failure.');
+
                     request(url)
                         .post('/login')
                         .send({username: user2.name, password: user2.password})
-                        .end(function (err, res) {
+                        .end((err, res) => {
                             if (err) {
                                 throw err;
                             }
-
-                            var params = {
+                            let params = {
                                 image: image.data,
                                 description: image.description,
                                 token: res.body.token
@@ -224,7 +225,7 @@ describe('API', function () {
                             request(url)
                                 .post('/api/upload')
                                 .send(params)
-                                .end(function (err, res) {
+                                .end((err, res) => {
                                     if (err) {
                                         throw err;
                                     }
@@ -234,9 +235,9 @@ describe('API', function () {
                                 });
                         });
                 });
-        });
+        }).timeout(5000);
 
-        it('Should return a post ID and success.', function (done) {
+        it('Should return a post ID and success.', (done) => {
             var params = {
                 image: image.data,
                 description: image.description,
@@ -245,7 +246,7 @@ describe('API', function () {
             request(url)
                 .post('/api/upload')
                 .send(params)
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -257,12 +258,12 @@ describe('API', function () {
                 });
         });
 
-        it('Should return error on missing data.', function (done) {
+        it('Should return error on missing data.', (done) => {
             var params = {token: key.token};
             request(url)
                 .post('/api/upload')
                 .send(params)
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -273,13 +274,13 @@ describe('API', function () {
                 });
         });
 
-        it('Should return unauthorized for invalid tokens.', function (done) {
+        it('Should return unauthorized for invalid tokens.', (done) => {
             var params = {image: '', description: '', token: ''};
 
             request(url)
                 .post('/api/upload')
                 .send(params)
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -291,12 +292,12 @@ describe('API', function () {
 
     });
 
-    describe('browse', function () {
+    describe('browse', () => {
 
-        it('Should return the correct image data for browsed picture.', function (done) {
+        it('Should return the correct image data for browsed picture.', (done) => {
             request(url)
                 .get('/api/browse/download?' + querystring.stringify({image: image.id, token: key.token}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -307,10 +308,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should return images containing the tag.', function (done) {
+        it('Should return images containing the tag.', (done) => {
             request(url)
                 .get('/api/browse/tags?' + querystring.stringify({tags: 'life', token: key.token}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -321,10 +322,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should return unauthorized for invalid tokens.', function (done) {
+        it('Should return unauthorized for invalid tokens.', (done) => {
             request(url)
                 .get('/api/browse/tags?' + querystring.stringify({tags: 'life', token: 'invalid_token'}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -334,10 +335,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should not return images not containing the tag.', function (done) {
+        it('Should not return images not containing the tag.', (done) => {
             request(url)
                 .get('/api/browse/tags?' + querystring.stringify({tags: 'noexist', token: key.token}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -348,10 +349,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should track the amount of times image viewed.', function (done) {
+        it('Should track the amount of times image viewed.', (done) => {
             request(url)
                 .get('/api/browse/tags?' + querystring.stringify({tags: 'life', token: key.token}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -362,10 +363,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should return tag completion successfully.', function (done) {
+        it('Should return tag completion successfully.', (done) => {
             request(url)
                 .get('/api/browse/tagcompletion?' + querystring.stringify({search: 'li', token: key.token}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -378,13 +379,13 @@ describe('API', function () {
     });
 
 
-    describe('gallery', function () {
+    describe('gallery', () => {
 
-        it('Should add an image to the users gallery.', function (done) {
+        it('Should add an image to the users gallery.', (done) => {
             request(url)
                 .post('/api/save')
                 .send({image: image.id, token: key.token})
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -395,10 +396,10 @@ describe('API', function () {
         });
 
 
-        it('Should return images in the gallery.', function (done) {
+        it('Should return images in the gallery.', (done) => {
             request(url)
                 .get('/api/browse/gallery?' + querystring.stringify({token: key.token}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -409,10 +410,10 @@ describe('API', function () {
                 });
         });
 
-       it('Should return unauthorized for invalid tokens.', function (done) {
+        it('Should return unauthorized for invalid tokens.', (done) => {
             request(url)
                 .get('/api/browse/gallery' + querystring.stringify({token: 'invalid_token'}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -424,12 +425,12 @@ describe('API', function () {
     });
 
 
-    describe('report', function () {
-        it('Should increase the reported counter of the image', function (done) {
+    describe('report', () => {
+        it('Should increase the reported counter of the image', (done) => {
             request(url)
                 .post('/api/report')
                 .send({image: image.id, token: key.token})
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -440,10 +441,10 @@ describe('API', function () {
                 });
         });
 
-        it('Should remove images that have been reported.', function (done) {
+        it('Should remove images that have been reported.', (done) => {
             request(url)
                 .get('/api/browse/download?' + querystring.stringify({image: image.id, token: key.token}))
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -453,11 +454,11 @@ describe('API', function () {
                 });
         });
 
-        it('Should unsave an image from the gallery.', function (done) {
+        it('Should unsave an image from the gallery.', (done) => {
             request(url)
                 .post('/api/unsave')
                 .send({image: image.id, token: key.token})
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -468,11 +469,11 @@ describe('API', function () {
         });
 
 
-        it('Should return unauthorized for invalid tokens.', function (done) {
+        it('Should return unauthorized for invalid tokens.', (done) => {
             request(url)
                 .post('/api/report')
                 .send({token: 'invalid_token'})
-                .end(function (err, res) {
+                .end((err, res) => {
                     if (err) {
                         throw err;
                     }
@@ -481,7 +482,7 @@ describe('API', function () {
 
                     request(url)
                         .get('/api/save?' + querystring.stringify({token: 'invalid_token'}))
-                        .end(function (err, res) {
+                        .end((err, res) => {
                             if (err) {
                                 throw err;
                             }

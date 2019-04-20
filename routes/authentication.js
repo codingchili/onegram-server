@@ -8,23 +8,24 @@
 var express = require('express');
 var app = express();
 var token = require('../model/token');
-var protocol = require('../routes/API/protocol');
+var http = require('../routes/api/protocol');
 
 
 app.all('*', function(req, res, next) {
-    var key = (req.body.token) || (req.query.token);
+    let key = (req.body.token) || (req.query.token);
 
     if (key) {
         token.verify(key, function (err, result) {
             if (result) {
                 next();
             } else {
-                res.statusCode = protocol.unauthorized;
+                res.statusCode = http.unauthorized;
                 res.send();
             }
         });
-    } else
-        res.render('missing.jade');
+    } else {
+        res.sendStatus(http.unauthorized);
+    }
 });
 
 module.exports = app;
