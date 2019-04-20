@@ -15,6 +15,7 @@ addons:
       - g++-4.8
 install:
   - npm install
+  - node bin/www &
   - npm install mocha@6.1.4 -g
 script:
   - mocha --exit
