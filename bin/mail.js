@@ -23,7 +23,7 @@ module.exports = {
             subject: '1Gram Account Verification',
             text: '',
             html: `Thank you for registering with 1Gram, <br><br>
-          You may activate your account using this <a href="https://192.168.10.183/register/verify?token=${key}">link</a>.
+          You may activate your account using this <a href="https://192.168.10.183:1443/register/verify?token=${key}">link</a>.
           <br><br>
           Regards,<br>
           1Gram.com`
